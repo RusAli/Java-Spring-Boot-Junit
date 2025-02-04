@@ -2,21 +2,38 @@ package org.myapp.tests;
 
 import org.junit.jupiter.api.Test;
 import org.myapp.config.MyConfig;
-import org.myapp.steps.RestStepsService;
+import org.myapp.jdbc.JdbcStepsService;
+import org.myapp.rest.RestStepsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = MyConfig.class)
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonPartEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 @ActiveProfiles("dev")
+@EnableAutoConfiguration
+@SpringBootTest(classes = MyConfig.class)
 public class SmokeTest {
 
     @Autowired
-    private RestStepsService restStepsService;
+    RestStepsService restStepsService;
+
+    @Autowired
+    JdbcStepsService jdbcStepsService;
 
     @Test
-    void firstSmokeTest() {
+    void restTest() {
+        String response = restStepsService.callRestService();
+        assertThat(response, is(jsonPartEquals("data.id", 2)));
+    }
 
-        restStepsService.callRestService();
+    @Test
+    void jdbcTest(){
+       String result = jdbcStepsService.callDb();
+       assertThat(result,is("1"));
+
     }
 }
