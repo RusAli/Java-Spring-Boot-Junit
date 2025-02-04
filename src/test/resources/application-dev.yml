@@ -6,3 +6,18 @@ spring:
     password: password
     username: sa
     driverClassName: org.h2.Driver
+
+  kafka:
+    bootstrap-servers:
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.common.serialization.StringDeserializer
+      value-deserializer: org.apache.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.common.serialization.StringSerializer
+      value-serializer: org.apache.common.serialization.StringSerializer
+      properties:
+        enable.idempotence: false
+    listener:
+      ack-mode: manual_immediate

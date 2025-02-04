@@ -1,8 +1,10 @@
 package org.myapp.tests;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.myapp.config.MyConfig;
 import org.myapp.jdbc.JdbcStepsService;
+import org.myapp.kafka.KafkaService;
 import org.myapp.rest.RestStepsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,6 +26,9 @@ public class SmokeTest {
     @Autowired
     JdbcStepsService jdbcStepsService;
 
+    @Autowired
+    KafkaService kafkaService;
+
     @Test
     void restTest() {
         String response = restStepsService.callRestService();
@@ -34,6 +39,12 @@ public class SmokeTest {
     void jdbcTest(){
        String result = jdbcStepsService.callDb();
        assertThat(result,is("1"));
+    }
 
+    @Test
+    void kafkaTest(){
+        kafkaService.sendMessage("Message");
+        ConsumerRecord<String,String> record = kafkaService.getRecord();
+        assertThat(record.value(), is("Message"));
     }
 }
