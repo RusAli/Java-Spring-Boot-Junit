@@ -9,6 +9,9 @@ spring:
 
   kafka:
     bootstrap-servers:
+    security.protocol: SSL
+    ssl.client.auth: requested
+    ssl.engine.factory.class: org.myapp.utils.KafkaSslUtils
     consumer:
       enable-auto-commit: false
       auto-offset-reset: earliest
